@@ -40,6 +40,7 @@ export function extractI18NReport (vueItems: I18NItemWithBounding[], languageFil
     if (detect.includes(DetectionType.Unused)) {
     const unusedKeysInLanguage = languageItems
       .filter(languageItem => !vueItems.some(vueItem => languageItem.path === vueItem.path || languageItem.path.startsWith(vueItem.path + '.')))
+      .filter(item => !maybeDynamicKeys.some(dynKey => new RegExp(dynKey.path.replace(/\$\{[^}]+\}/g, `\\w+`), 'i').test(item.path)))
       .map(languageItem => ({ ...languageItem, language }));
 
     unusedKeys.push(...unusedKeysInLanguage);
